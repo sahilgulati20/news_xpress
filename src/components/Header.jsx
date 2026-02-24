@@ -1,0 +1,175 @@
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import ThemeToggle from './ThemeToggle';
+import { categories } from '../constants/data';
+
+const Header = () => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const location = useLocation();
+
+    // Close menu when route changes
+    useEffect(() => {
+        setIsMenuOpen(false);
+    }, [location]);
+
+    // Prevent scrolling when menu is open
+    useEffect(() => {
+        if (isMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isMenuOpen]);
+
+    // Derived sections to mimic the rich, multi-column layout of Billboard
+    const megaMenuColumns = [
+        { title: 'NEWS', links: categories.slice(0, 3) },
+        { title: 'DISCOVER', links: categories.slice(3, 6) },
+        { title: 'LIFESTYLE', links: categories.slice(6) },
+        {
+            title: 'COMPANY', links: [
+                { id: 'c1', name: 'About Us', path: '#' },
+                { id: 'c2', name: 'Careers', path: '#' },
+                { id: 'c3', name: 'Contact', path: '#' }
+            ]
+        }
+    ];
+
+    return (
+        <>
+            <header className="sticky top-0 z-50 w-full bg-[#f8f9fa] dark:bg-[#0b101e] border-b border-gray-200 dark:border-gray-800 transition-colors duration-300 relative">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between items-center h-20">
+
+                        {/* Left Hand Side: Hamburger & Logo */}
+                        <div className="flex items-center">
+                            <button
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                className="mr-6 p-2 text-black dark:text-white hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none transition-colors"
+                                aria-label="Toggle Menu"
+                            >
+                                {/* 3 Horizontal Lines (Hamburger) */}
+                                <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                            </button>
+
+                            <Link to="/" className="text-4xl font-black tracking-tighter text-black dark:text-white">
+                                NEWS<span className="text-blue-600 dark:text-blue-400">PORTAL</span>
+                            </Link>
+                        </div>
+
+                        {/* Center: Navigation Links (Desktop only, CNN style) */}
+                        <nav className="hidden lg:flex flex-1 items-center justify-center space-x-6 mx-4">
+                            {categories.map((category) => (
+                                <Link
+                                    key={category.id}
+                                    to={category.path}
+                                    className="text-base font-bold text-black dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap"
+                                >
+                                    {category.name}
+                                </Link>
+                            ))}
+                        </nav>
+
+                        {/* Right Hand Side: Utilities */}
+                        <div className="flex items-center space-x-4 sm:space-x-6 ml-auto">
+                            <button aria-label="Search" className="text-black dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </button>
+                            <ThemeToggle />
+
+                            <button className="hidden sm:block font-bold text-sm tracking-wider uppercase text-black dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                Subscribe
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Billboard Mega Menu Overlay */}
+                <div
+                    className={`fixed inset-0 top-0 left-0 w-full h-screen bg-[#f4f4f4] dark:bg-[#0b101e] transform transition-all duration-500 ease-in-out ${isMenuOpen ? 'translate-y-0 opacity-100 visible' : '-translate-y-full opacity-0 invisible'} z-[60] flex flex-col`}
+                >
+                    {/* Menu Utilities Header */}
+                    <div className="w-full bg-[#f4f4f4] dark:bg-[#0b101e] border-b border-gray-300 dark:border-gray-800 h-20 flex justify-between items-center transition-colors duration-300 shrink-0 pr-0 pl-4 sm:pl-6 lg:pl-8 max-w-7xl mx-auto">
+
+                        <div className="flex items-center space-x-6">
+                            <Link to="/" className="text-4xl font-black tracking-tighter text-black dark:text-white" onClick={() => setIsMenuOpen(false)}>
+                                NEWS<span className="text-blue-600 dark:text-blue-400">PORTAL</span>
+                            </Link>
+                        </div>
+
+                        {/* The Neon Square Close Button (Billboard reference) */}
+                        <button
+                            onClick={() => setIsMenuOpen(false)}
+                            className="w-20 h-20 bg-emerald-400 dark:bg-emerald-500 flex items-center justify-center hover:bg-emerald-500 dark:hover:bg-emerald-600 transition-colors active:scale-95 group relative -mr-4 sm:-mr-6 lg:-mr-8"
+                            aria-label="Close Menu"
+                        >
+                            <svg className="h-10 w-10 text-black group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={1} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    {/* Menu Content - Scrollable multi-columns */}
+                    <div className="flex-grow overflow-y-auto w-full">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+
+                                {megaMenuColumns.map((column, idx) => (
+                                    <div key={idx}>
+                                        {/* Column Header */}
+                                        <h3 className="text-xl font-black text-black dark:text-white uppercase tracking-widest mb-6 border-t-[3px] border-black dark:border-white pt-4 transition-colors">
+                                            {column.title}
+                                        </h3>
+
+                                        {/* Links */}
+                                        <ul className="space-y-3">
+                                            {column.links.map((link) => (
+                                                <li key={link.id}>
+                                                    <Link
+                                                        to={link.path}
+                                                        className="text-base font-semibold text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white inline-block relative group transition-colors focus:outline-none"
+                                                        onClick={() => setIsMenuOpen(false)}
+                                                    >
+                                                        {link.name}
+                                                        {/* Animated underline on hover */}
+                                                        <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-emerald-400 dark:bg-emerald-400 transition-all duration-300 group-hover:w-full group-focus:w-full"></span>
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ))}
+
+                            </div>
+
+                            {/* Mobile only elements in Mega Menu */}
+                            <div className="lg:hidden mt-8 pt-8 border-t border-gray-300 dark:border-gray-800">
+                                <input
+                                    type="text"
+                                    placeholder="Search..."
+                                    className="w-full bg-white dark:bg-slate-900 text-black dark:text-white border border-gray-300 dark:border-gray-700 p-4 font-semibold focus:outline-none rounded-sm mb-6"
+                                />
+                                <div className="flex space-x-4">
+                                    <ThemeToggle />
+                                    <button className="flex-1 bg-black dark:bg-white text-white dark:text-black py-3 font-black uppercase tracking-wider transition-colors hover:bg-gray-800 dark:hover:bg-gray-200">
+                                        Subscribe
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </>
+    );
+};
+
+export default Header;

@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, ScrollRestoration } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -10,6 +10,9 @@ function App() {
     <div className="min-h-screen flex flex-col lg:pt-0">
       {/* pt is added so content isn't hidden behind fixed header if layout relies on absolute */}
       <Header />
+
+      {/* Persistence of scroll state */}
+      <ScrollRestoration />
 
       {/* Routing Logic */}
       <Routes>

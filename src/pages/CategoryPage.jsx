@@ -43,11 +43,6 @@ const CategoryPage = () => {
         };
 
         fetchCategoryPosts();
-
-        // Scroll to top when paginating
-        if (currentPage > 1) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
     }, [category, displayCategory, currentPage]);
 
     // Reset page when category changes
@@ -96,18 +91,18 @@ const CategoryPage = () => {
 
                             {/* Pagination Controls */}
                             {totalPages > 1 && (
-                                <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-16 mb-8 group">
-                                    <div className="flex items-center space-x-2">
+                                <div className="flex flex-col items-center gap-6 mt-16 mb-12">
+                                    <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-4 w-full">
                                         <button
                                             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                                             disabled={currentPage === 1 || isPaginating}
-                                            className="h-10 px-4 border border-gray-300 dark:border-gray-700 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800 transition-all font-black text-xs uppercase tracking-widest flex items-center shadow-sm"
+                                            className="h-10 px-3 sm:px-4 border border-gray-300 dark:border-gray-700 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800 transition-all font-black text-[10px] sm:text-xs uppercase tracking-widest flex items-center shadow-sm shrink-0"
                                         >
                                             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
-                                            Prev
+                                            <span className="hidden xs:inline">Prev</span>
                                         </button>
 
-                                        <div className="flex items-center -space-x-px overflow-x-auto no-scrollbar py-1">
+                                        <div className="flex items-center -space-x-px py-1">
                                             {(() => {
                                                 const pages = [];
                                                 const showMax = 5;
@@ -120,9 +115,9 @@ const CategoryPage = () => {
 
                                                 if (start > 1) {
                                                     pages.push(
-                                                        <button key={1} onClick={() => setCurrentPage(1)} className="w-10 h-10 flex items-center justify-center border border-gray-300 dark:border-gray-700 text-sm font-black transition-all hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 first:rounded-l-lg">1</button>
+                                                        <button key={1} onClick={() => setCurrentPage(1)} className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center border border-gray-300 dark:border-gray-700 text-xs sm:text-sm font-black transition-all hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 first:rounded-l-lg">1</button>
                                                     );
-                                                    if (start > 2) pages.push(<span key="dots-start" className="px-2 text-gray-400 font-black">...</span>);
+                                                    if (start > 2) pages.push(<span key="dots-start" className="px-1 sm:px-2 text-gray-400 font-black">...</span>);
                                                 }
 
                                                 for (let i = start; i <= end; i++) {
@@ -130,9 +125,9 @@ const CategoryPage = () => {
                                                         <button
                                                             key={i}
                                                             onClick={() => setCurrentPage(i)}
-                                                            className={`w-10 h-10 flex items-center justify-center border border-gray-300 dark:border-gray-700 text-sm font-black transition-all ${currentPage === i
-                                                                    ? 'bg-blue-600 border-blue-600 text-white z-10 scale-110 shadow-md rounded-md'
-                                                                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                                            className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center border border-gray-300 dark:border-gray-700 text-xs sm:text-sm font-black transition-all ${currentPage === i
+                                                                ? 'bg-blue-600 border-blue-600 text-white z-10 scale-110 shadow-md rounded-md'
+                                                                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                                                                 }`}
                                                         >
                                                             {i}
@@ -141,9 +136,9 @@ const CategoryPage = () => {
                                                 }
 
                                                 if (end < totalPages) {
-                                                    if (end < totalPages - 1) pages.push(<span key="dots-end" className="px-2 text-gray-400 font-black">...</span>);
+                                                    if (end < totalPages - 1) pages.push(<span key="dots-end" className="px-1 sm:px-2 text-gray-400 font-black">...</span>);
                                                     pages.push(
-                                                        <button key={totalPages} onClick={() => setCurrentPage(totalPages)} className="w-10 h-10 flex items-center justify-center border border-gray-300 dark:border-gray-700 text-sm font-black transition-all hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 last:rounded-r-lg">{totalPages}</button>
+                                                        <button key={totalPages} onClick={() => setCurrentPage(totalPages)} className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center border border-gray-300 dark:border-gray-700 text-xs sm:text-sm font-black transition-all hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 last:rounded-r-lg">{totalPages}</button>
                                                     );
                                                 }
                                                 return pages;
@@ -153,14 +148,14 @@ const CategoryPage = () => {
                                         <button
                                             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                                             disabled={currentPage === totalPages || isPaginating}
-                                            className="h-10 px-4 border border-gray-300 dark:border-gray-700 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800 transition-all font-black text-xs uppercase tracking-widest flex items-center shadow-sm"
+                                            className="h-10 px-3 sm:px-4 border border-gray-300 dark:border-gray-700 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800 transition-all font-black text-[10px] sm:text-xs uppercase tracking-widest flex items-center shadow-sm shrink-0"
                                         >
-                                            Next
+                                            <span className="hidden xs:inline">Next</span>
                                             <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
                                         </button>
                                     </div>
-                                    <div className="text-xs font-bold text-gray-500 dark:text-gray-500 uppercase tracking-tighter">
-                                        Displaying {currentPage} of {totalPages}
+                                    <div className="text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-500 uppercase tracking-[0.2em] bg-gray-100 dark:bg-gray-800 px-4 py-1 rounded-full">
+                                        Page {currentPage} of {totalPages}
                                     </div>
                                 </div>
                             )}

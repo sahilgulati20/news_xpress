@@ -1,4 +1,4 @@
-const AdSpace = ({ type = 'standard' }) => {
+const AdSpace = ({ type = 'standard', className = 'my-8' }) => {
     // Define different dimensions based on ad type
     const styling = {
         billboard: 'w-full max-w-5xl h-[250px] mx-auto',   // Large top header ad
@@ -7,7 +7,7 @@ const AdSpace = ({ type = 'standard' }) => {
     };
 
     return (
-        <div className={`relative flex flex-col items-center justify-center bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 my-8 overflow-hidden overflow-hidden ${styling[type]}`}>
+        <div className={`relative flex flex-col items-center justify-center bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 overflow-hidden ${className} ${styling[type]}`}>
             <span className="absolute top-2 right-2 text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
                 Advertisement
             </span>

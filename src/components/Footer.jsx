@@ -1,15 +1,23 @@
+import { Link } from 'react-router-dom';
+import { useTheme } from '../contexts/ThemeContext';
 import { categories } from '../constants/data';
 
 const Footer = () => {
+    const { isDarkMode } = useTheme();
+
     return (
         <footer className="bg-gray-50 dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 transition-colors duration-300 mt-20 pt-16 pb-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                     {/* Brand/About */}
                     <div className="md:col-span-1">
-                        <a href="/" className="text-2xl font-black tracking-tighter text-blue-600 dark:text-blue-400 mb-4 inline-block">
-                            NEWS<span className="text-gray-900 dark:text-white">PORTAL</span>
-                        </a>
+                        <Link to="/" className="mb-6 inline-block">
+                            <img
+                                src={isDarkMode ? "/dark-logo.png" : "/light-logo.png"}
+                                alt="The News Xpress"
+                                className="h-10 w-auto object-contain"
+                            />
+                        </Link>
                         <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-6">
                             Delivering the most important stories from around the globe directly to your screen, 24/7. Trusted independent journalism.
                         </p>

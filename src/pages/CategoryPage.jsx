@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import NewsCard from '../components/NewsCard';
 import Sidebar from '../components/Sidebar';
@@ -13,6 +13,8 @@ const CategoryPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalCount, setTotalCount] = useState(0);
     const pageSize = 10;
+    
+    const isInitialMount = useRef(true);
 
     // Local formatter for title case
     const toTitleCase = (str) => {
@@ -26,11 +28,10 @@ const CategoryPage = () => {
 
     useEffect(() => {
         const fetchCategoryPosts = async () => {
-            if (currentPage === 1) setIsLoading(true);
+            if (currentPage === 1 && isInitialMount.current) setIsLoading(true);
             else setIsPaginating(true);
 
             try {
-                // Pass the raw category (slug) to the service for accurate tag matching
                 const { posts: data, totalCount: count } = await getPostsByCategory(category, currentPage, pageSize);
                 setPosts(data);
                 setTotalCount(count);
@@ -43,11 +44,22 @@ const CategoryPage = () => {
         };
 
         fetchCategoryPosts();
+
+        // Scroll logic
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            const target = document.getElementById('category-news');
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     }, [category, displayCategory, currentPage]);
 
     // Reset page when category changes
     useEffect(() => {
         setCurrentPage(1);
+        isInitialMount.current = true; // Reset mount flag for new category
     }, [category]);
 
     const totalPages = Math.ceil(totalCount / pageSize);
@@ -71,7 +83,7 @@ const CategoryPage = () => {
 
             <div className="flex flex-col lg:flex-row gap-12 relative mt-8">
                 {/* Category News Grid */}
-                <div className="w-full lg:w-2/3">
+                <div className="w-full lg:w-2/3" id="category-news">
                     {posts.length > 0 ? (
                         <>
                             <div className={`grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12 transition-opacity duration-300 ${isPaginating ? 'opacity-50' : 'opacity-100'}`}>

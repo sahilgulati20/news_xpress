@@ -1,10 +1,12 @@
 import { supabase } from '../lib/supabase';
+import { getGoogleDriveImageUrl } from '../utils/urlHelper';
 
 const normalizePost = (post) => {
     if (!post) return null;
+    const rawImage = post.cover_url || post.imageUrl;
     return {
         ...post,
-        imageUrl: post.cover_url || post.imageUrl,
+        imageUrl: getGoogleDriveImageUrl(rawImage),
         category: (post.tags && post.tags.length > 0) ? post.tags[0] : (post.category || 'General'),
         content: post.content_html || post.content,
         timestamp: post.published_at ? new Date(post.published_at).toLocaleDateString(undefined, {
@@ -16,6 +18,7 @@ const normalizePost = (post) => {
         }) : post.timestamp || 'Just now'
     };
 };
+
 
 export const getHeroPosts = async () => {
     const { data, error } = await supabase

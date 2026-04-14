@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import HeroArticle from '../components/HeroArticle';
 import NewsCard from '../components/NewsCard';
 import Sidebar from '../components/Sidebar';
@@ -15,6 +15,8 @@ const Home = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalCount, setTotalCount] = useState(0);
     const pageSize = 10;
+    
+    const isInitialMount = useRef(true);
 
     // Fetch Hero only on mount
     useEffect(() => {
@@ -43,7 +45,7 @@ const Home = () => {
     // Fetch Latest News on page change
     useEffect(() => {
         const fetchLatest = async () => {
-            setIsPaginating(true);
+            if (!isInitialMount.current) setIsPaginating(true);
             try {
                 const { posts, totalCount: count } = await getLatestPosts(currentPage, pageSize);
                 setLatestPosts(posts);
@@ -57,8 +59,16 @@ const Home = () => {
         };
 
         fetchLatest();
-
-        // ScrollRestoration handles this now automatically
+        
+        // Scroll to the latest news section when page changes (not on first load)
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            const target = document.getElementById('latest-news');
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     }, [currentPage]);
 
     const totalPages = Math.ceil(totalCount / pageSize);

@@ -1,10 +1,13 @@
 import TrendingList from './TrendingList';
+import AdSpace from './AdSpace';
 
 const Sidebar = () => {
     return (
         <aside className="hidden lg:block w-full lg:w-1/3 lg:pl-8 mt-12 lg:mt-0">
             <div className="sticky top-24">
                 <TrendingList />
+
+                <AdSpace type="sidebar" className="mt-12" />
 
                 {/* Newsletter Signup (Dummy) */}
                 <div className="mt-12 bg-gray-100 dark:bg-slate-800 p-6 rounded-xl border border-gray-200 dark:border-slate-700">
